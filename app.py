@@ -48,5 +48,5 @@ async def analyze_cv(file: UploadFile = File(...)):
         "You need to show the source nodes that you are using to answer the question at the end of your response.\n"
         f"CV: {input_cv[0]} \n"
     )
-    return {"response": response}
+    return {"response": response.response}
 
