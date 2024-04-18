@@ -1,7 +1,9 @@
-fastapi
-uvicorn
-python-multipart
-python-dotenv
 llama-index
+python-dotenv
 llama-index-llms-together
 llama-index-embeddings-together
+unstructured[pdf]
+fastapi
+python-multipart
+pillow==10.0.0
+pytesseract
