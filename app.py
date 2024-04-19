@@ -62,7 +62,7 @@ async def analyze_cv(file: UploadFile = File(...)):
         "If you are asked to return jobs that are suitable for the job seeker, return Job ID, Title and Link.\n"
         "If you are not sure about the answer, return NA. \n"
         "You need to show the source nodes that you are using to answer the question at the end of your response.\n"
-        f"CV: {input_cv_text[0]} \n"  # Adjust based on how `input_cv_text` is structured
+        f"CV: {input_cv[0]} \n"  # Adjust based on how `input_cv_text` is structured
     )
 
     slug = create_slug(response.response)
