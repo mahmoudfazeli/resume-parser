@@ -69,10 +69,11 @@ async def analyze_cv(file: UploadFile = File(...)):
     response = query_engine.query(
         "You are a brilliant career adviser. Answer a question of job seekers with given information.\n"
         "If their CV information is given, use that information as well to answer the question.\n"
-        "If you are asked to return jobs that are suitable for the job seeker, return Job ID, Title and Link.\n"
+        "If you are asked to return jobs that are suitable for the job seeker, return Job ID, Title, Link and Date Posted.\n"
         "If you are not sure about the answer, return NA. \n"
         "You need to show the source nodes that you are using to answer the question at the end of your response.\n"
         f"CV: {input_cv[0]} \n"  # Adjust based on how `input_cv_text` is structured
+
     )
 
     slug = create_slug(response.response)
