@@ -4,6 +4,7 @@ import os
 import re
 import uvicorn
 import nest_asyncio
+from llama_parse import LlamaParse
 from llama_index.core import VectorStoreIndex, Settings
 from llama_index.llms.together import TogetherLLM
 from llama_index.embeddings.together import TogetherEmbedding
