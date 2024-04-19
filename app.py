@@ -1,5 +1,6 @@
 from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 import os
 import re
 import uvicorn
@@ -12,6 +13,15 @@ from dotenv import load_dotenv
 import tempfile
 
 app = FastAPI()
+
+# CORS configuration to allow all origins
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods
+    allow_headers=["*"],  # Allows all headers
+)
 
 nest_asyncio.apply()
 load_dotenv()
