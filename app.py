@@ -2,11 +2,9 @@ from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.responses import JSONResponse
 import os
 import re
-import nltk
 import uvicorn
 import nest_asyncio
 from llama_index.core import VectorStoreIndex, Settings
-from llama_index.readers.file import UnstructuredReader
 from llama_index.llms.together import TogetherLLM
 from llama_index.embeddings.together import TogetherEmbedding
 from dotenv import load_dotenv
@@ -28,8 +26,11 @@ embed_model = TogetherEmbedding(
 Settings.llm = llm
 Settings.embed_model = embed_model
 
-nltk.download('averaged_perceptron_tagger')
-loader = UnstructuredReader()
+parser = LlamaParse(
+    api_key=  os.getenv("LLAMA_CLOUD_API_KEY"),  # can also be set in your env as LLAMA_CLOUD_API_KEY
+    result_type="markdown",  # "markdown" and "text" are available
+    verbose=True,
+)
 
 def create_slug(input_string):
     string_low = input_string.lower()
@@ -49,7 +50,7 @@ async def analyze_cv(file: UploadFile = File(...)):
         temp_file.write(input_cv)
 
     # Now assume loader.load_data() expects a filepath
-    input_cv_text = loader.load_data("tempfile.pdf")  # Modify as needed
+    input_cv_text = parser.load_data("tempfile.pdf")  # Modify as needed
 
     index = VectorStoreIndex.from_documents([input_cv_text])
     query_engine = index.as_query_engine()
