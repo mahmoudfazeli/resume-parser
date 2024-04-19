@@ -9,6 +9,7 @@ from llama_index.core import VectorStoreIndex, Settings
 from llama_index.llms.together import TogetherLLM
 from llama_index.embeddings.together import TogetherEmbedding
 from dotenv import load_dotenv
+import tempfile
 
 app = FastAPI()
 
@@ -28,7 +29,7 @@ Settings.llm = llm
 Settings.embed_model = embed_model
 
 parser = LlamaParse(
-    api_key=  os.getenv("LLAMA_CLOUD_API_KEY"),  # can also be set in your env as LLAMA_CLOUD_API_KEY
+    api_key=os.getenv("LLAMA_CLOUD_API_KEY"),  # can also be set in your env as LLAMA_CLOUD_API_KEY
     result_type="markdown",  # "markdown" and "text" are available
     verbose=True,
 )
@@ -44,16 +45,16 @@ async def analyze_cv(file: UploadFile = File(...)):
     if file.content_type != 'application/pdf':
         raise HTTPException(status_code=415, detail="Unsupported file type.")
     
-    input_cv = await file.read()  # Assuming you manage to read the file directly
-    
-    # Temporary file handling if necessary
-    with open("tempfile.pdf", "wb") as temp_file:
-        temp_file.write(input_cv)
+    with tempfile.TemporaryDirectory() as temp_dir:
+        file_path = os.path.join(temp_dir, file.filename)
+        with open(file_path, "wb") as temp_file:
+            content = await file.read()
+            temp_file.write(content)
+            temp_file.flush()  # Ensure all data is written to disk
 
-    # Now assume loader.load_data() expects a filepath
-    input_cv_text = parser.load_data("tempfile.pdf")  # Modify as needed
+        input_cv = parser.load_data(file_path)
 
-    index = VectorStoreIndex.from_documents([input_cv_text])
+    index = VectorStoreIndex.from_documents(input_cv)
     query_engine = index.as_query_engine()
     response = query_engine.query(
         "You are a brilliant career adviser. Answer a question of job seekers with given information.\n"
