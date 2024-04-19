@@ -8,8 +8,8 @@ WORKDIR /resume-parser
 RUN apt-get update && apt-get install -y \
     poppler-utils \
     tesseract-ocr \
-    libgl1-mesa-glx && \  # This line continues the RUN command to the next line
-    rm -rf /var/lib/apt/lists/*
+    libgl1-mesa-glx \
+ && rm -rf /var/lib/apt/lists/*  # Correct chaining of commands
 
 # Copy the current directory contents into the container at /resume-parser
 COPY . /resume-parser
